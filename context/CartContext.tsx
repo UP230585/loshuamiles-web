@@ -1,19 +1,60 @@
 'use client';
 import { createContext, useContext, useState, ReactNode } from 'react';
 
-// Fuente única de verdad para los precios de toda la app
 export const PRODUCTOS_DATA = [
-  { id: 1, nombre: "Asadero tipo Oaxaca", precio: 170, precioLocal: 130, imagen: "https://images.unsplash.com/photo-1559561853-08451507cbe7?q=80&w=800" },
-  { id: 2, nombre: "Fresco", precio: 160, precioLocal: 125, imagen: "https://images.unsplash.com/photo-1626967739436-cc80924c502b?q=80&w=800" },
-  { id: 3, nombre: "Añejo", precio: 180, precioLocal: 140, imagen: "https://images.unsplash.com/photo-1452195100486-9cc805987862?q=80&w=800" },
-  { id: 4, nombre: "Panela", precio: 160, precioLocal: 125, imagen: "https://images.unsplash.com/photo-1634484307049-923f04494f31?q=80&w=800" },
-  { id: 5, nombre: "Requesón", precio: 100, precioLocal: 80, imagen: "https://images.unsplash.com/photo-1634484307049-923f04494f31?q=80&w=800" },
+  { 
+    id: 1, 
+    nombre: "Asadero tipo Oaxaca", 
+    precio: 170, 
+    precioLocal: 130, 
+    imagen: "/productos/asadero/principal.jpg",
+    imagenesGaleria: ["/productos/asadero/principal.jpg", "/productos/asadero/foto1.jpg"],
+    descripcionGourmet: "Nuestro queso estrella. Elaborado artesanalmente con leche fresca del día, logrando una elasticidad perfecta y un sabor cremoso incomparable."
+  },
+  { 
+    id: 2, 
+    nombre: "Fresco", 
+    precio: 160, 
+    precioLocal: 125, 
+    imagen: "/productos/fresco/principal.jpg",
+    imagenesGaleria: ["/productos/fresco/principal.jpg", "/productos/fresco/foto1.jpg"],
+    descripcionGourmet: "Textura suave y sabor delicado. El compañero ideal para tus platillos mexicanos tradicionales."
+  },
+  { 
+    id: 3, 
+    nombre: "Añejo", 
+    precio: 180, 
+    precioLocal: 140, 
+    imagen: "/productos/anejo/principal.jpg",
+    imagenesGaleria: ["/productos/anejo/principal.jpg", "/productos/anejo/foto1.jpg", "/productos/anejo/foto2.jpg", "/productos/anejo/foto3.jpg", "/productos/anejo/foto4.jpg", "/productos/anejo/foto5.jpg", "/productos/anejo/foto6.jpg", "/productos/anejo/foto7.jpg"],
+    descripcionGourmet: "Sabor intenso y textura firme. Un queso con carácter, ideal para maridar o desmoronar sobre tus platillos favoritos."
+  },
+  { 
+    id: 4, 
+    nombre: "Panela", 
+    precio: 160, 
+    precioLocal: 125, 
+    imagen: "/productos/panela/principal.jpg",
+    imagenesGaleria: ["/productos/panela/principal.jpg", "/productos/panela/foto1.jpg", "/productos/panela/foto2.jpg", "/productos/panela/foto3.jpg"],
+    descripcionGourmet: "Ligero y fresco. Perfecto para asar o disfrutar en ensaladas por su bajo contenido en grasa."
+  },
+  { 
+    id: 5, 
+    nombre: "Requesón", 
+    precio: 100, 
+    precioLocal: 80, 
+    imagen: "/productos/requeson/principal.jpg",
+    imagenesGaleria: ["/productos/requeson/principal.jpg", "/productos/requeson/foto1.jpg"],
+    descripcionGourmet: "Crema de queso suave y nutritiva. Elaborado con los estándares más altos de frescura."
+  },
   { 
     id: 6, 
     nombre: "Yogurt Artesanal", 
     precio: 60, 
     precioLocal: 45, 
-    imagen: "https://images.unsplash.com/photo-1634484307049-923f04494f31?q=80&w=800",
+    imagen: "/productos/yogurt/principal.jpg",
+    imagenesGaleria: ["/productos/yogurt/principal.jpg", "/productos/yogurt/foto2.jpg"],
+    descripcionGourmet: "Cremoso y natural. Mezclado con fruta real seleccionada, sin conservadores artificiales.",
     sabores: ["Fresa", "Nuez", "Manzana", "Piña-Coco", "Cereal", "Frambuesa", "Zarzamora"] 
   }
 ];
