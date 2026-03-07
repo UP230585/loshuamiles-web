@@ -6,8 +6,8 @@ import Footer from "@/components/Footer";
 import { CartProvider } from "@/context/CartContext";
 
 export const metadata: Metadata = {
-  title: "Quesería La Artesana | Quesos Premium",
-  description: "Selección de quesos artesanales y gourmet.",
+  title: "Quesería Los huamiles | Quesos Premium",
+  description: "Selección de quesos artesanales.",
 };
 
 export default function RootLayout({
