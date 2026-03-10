@@ -61,7 +61,6 @@ export default function Home() {
                 {queso.nombre}
               </h3>
               <p className="text-[#2D2A26] font-bold tracking-tighter text-xl">
-                ${getPrecioActual(queso.id).toFixed(2)} 
                 <span className="text-[10px] text-stone-400 font-normal uppercase tracking-widest ml-1">/ kg</span>
               </p>
             </Link>
