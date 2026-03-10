@@ -14,22 +14,9 @@ export default function SelectorZona() {
 
   const manejarEnvio = (e: React.FormEvent) => {
     e.preventDefault();
-    const t = input.toLowerCase().trim();
+    if (input.trim() === '') return; // No permite enviar vacío
     
-    const locales = [
-      'montesa', 'la montesa', 'los campos', 'las negritas', 'negritas', 
-      'el epazote', 'epazote', 'fraguas', 'las fraguas', 'el salitre', 
-      'el arco', 'pilotos', 'el hojo de agua'
-    ];
-    
-    if (locales.includes(t)) {
-      setZona('LOCAL');
-    } else if (t === 'leon' || t === 'león') {
-      setZona('LEON');
-    } else {
-      setZona('NORMAL');
-    }
-    
+    setZona(input);
     setVisible(false);
   };
 
@@ -49,7 +36,14 @@ export default function SelectorZona() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
-          <button className="w-full bg-[#2D2A26] text-white py-4 text-[10px] font-bold uppercase tracking-widest hover:bg-[#E5B044] transition-all">
+          <button 
+            disabled={input.trim() === ''}
+            className={`w-full py-4 text-[10px] font-bold uppercase tracking-widest transition-all ${
+              input.trim() === '' 
+              ? 'bg-stone-300 text-stone-500 cursor-not-allowed' 
+              : 'bg-[#2D2A26] text-white hover:bg-[#E5B044]'
+            }`}
+          >
             Entrar a la tienda
           </button>
         </form>

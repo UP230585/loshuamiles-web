@@ -15,7 +15,7 @@ export const PRODUCTOS_DATA = [
   { 
     id: 2, 
     nombre: "Fresco", 
-    precio: 160, 
+    precio: 165, 
     precioLocal: 125, 
     precioLeon: 200,
     imagen: "/productos/fresco/principal.jpg",
@@ -35,7 +35,7 @@ export const PRODUCTOS_DATA = [
   { 
     id: 4, 
     nombre: "Panela", 
-    precio: 160, 
+    precio: 165, 
     precioLocal: 125, 
     precioLeon: 200,
     imagen: "/productos/panela/principal.jpg",
@@ -100,24 +100,22 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (saved) setZonaState(saved);
   }, []);
 
-  // Función inteligente para detectar zona y comunidad
   const setZona = (inputUser: string) => {
-    // Normalizamos: minúsculas, sin espacios extra y sin acentos para comparar mejor
+    // Validar que no esté vacío
+    if (!inputUser || inputUser.trim().length === 0) return;
+
     const texto = inputUser.toLowerCase().trim()
       .normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
 
-    // Variaciones para LEÓN
     const variantesLeon = [
       'leon', 'leon gto', 'leon guanajuato', 'leon de los aldama', 
       'leon de los aldamas', 'león', 'león gto', 'león guanajuato'
     ];
 
-    // Variaciones para LOCAL (Incluyendo tu lista de comunidades)
     const variantesLocal = [
-
       'montesa', 'la montesa', 'los campos', 'las negritas', 'negritas', 
       'el epazote', 'epazote', 'fraguas', 'las fraguas', 'el salitre', 
-      'el arco', 'pilotos', 'ojo de agua', 'el ojo de agua'
+      'el arco', 'pilotos', 'ojo de agua', 'el ojo de agua', 'el hojo de agua',
     ];
 
     let zonaFinal: Zona = 'NORMAL';
