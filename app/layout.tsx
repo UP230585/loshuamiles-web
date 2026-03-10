@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer"; 
-// 1. Importamos el proveedor del carrito
 import { CartProvider } from "@/context/CartContext";
+import SelectorZona from "@/components/SelectorZona";
 
 export const metadata: Metadata = {
   title: "Quesería Los huamiles | Quesos Premium",
@@ -18,8 +18,8 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className="flex flex-col min-h-screen">
-        {/* 2. Envolvemos todo el contenido con CartProvider */}
         <CartProvider>
+           <SelectorZona />
           <Navbar />
           <div className="flex-grow">
             {children}
@@ -30,4 +30,3 @@ export default function RootLayout({
     </html>
   );
 }
-

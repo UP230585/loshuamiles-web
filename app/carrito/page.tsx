@@ -1,13 +1,10 @@
 'use client';
 import { useCart } from '@/context/CartContext';
 import Link from 'next/link';
-import { useState } from 'react';
 
 export default function CarritoPage() {
-  const { cart, removeFromCart, updateQuantity, clearCart, isLocal, toggleLocal, getPrecioActual } = useCart();
-  const [codigoInput, setCodigoInput] = useState('');
+  const { cart, removeFromCart, updateQuantity, clearCart, zona, getPrecioActual, getTelefonoWhatsApp } = useCart();
   
-  // Total calculado en tiempo real basándose en el precio base actual del contexto
   const totalDinero = cart.reduce((acc, item) => {
     const precioBase = getPrecioActual(item.id);
     return acc + (precioBase * item.multiplicador * item.cantidad);
@@ -28,7 +25,12 @@ export default function CarritoPage() {
     <main className="min-h-screen bg-[#FDFCF0] pt-32 pb-20 px-6">
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-end mb-12">
-          <h1 className="text-4xl font-serif text-[#2D2A26] italic">Tu Pedido</h1>
+          <div>
+            <h1 className="text-4xl font-serif text-[#2D2A26] italic">Tu Pedido</h1>
+            <p className="text-[10px] uppercase font-bold text-[#E5B044] tracking-widest mt-2">
+              Zona: {zona === 'LOCAL' ? 'Ruta Local' : zona === 'LEON' ? 'León' : 'General'}
+            </p>
+          </div>
           <button onClick={clearCart} className="text-[10px] uppercase font-bold text-red-800/60 hover:text-red-800">Vaciar Bolsa</button>
         </div>
 
@@ -66,14 +68,18 @@ export default function CarritoPage() {
               <span className="text-sm uppercase font-bold tracking-[0.3em] text-stone-400">Total Estimado</span>
               <span className="text-4xl font-serif text-[#2D2A26]">${totalDinero.toFixed(2)}</span>
             </div>
+            
             <button 
               onClick={() => {
-                const mensaje = `🧀 *Nuevo Pedido - Los Huamiles*\n\n` + 
+                const telefono = getTelefonoWhatsApp();
+                const zonaNombre = zona === 'LOCAL' ? 'Local' : zona === 'LEON' ? 'León' : 'General';
+                const mensaje = `🧀 *Nuevo Pedido - Los Huamiles*\n` +
                   cart.map(i => `• ${i.cantidad}x ${i.nombre} [${i.pesoLabel}] - $${(getPrecioActual(i.id) * i.multiplicador * i.cantidad).toFixed(2)}`).join('\n') + 
                   `\n\n💰 *Total Estimado: $${totalDinero.toFixed(2)}*`;
-                window.open(`https://wa.me/524969611765?text=${encodeURIComponent(mensaje)}`);
+                
+                window.open(`https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`);
               }}
-              className="w-full bg-[#2D2A26] text-white py-5 font-bold uppercase text-xs tracking-[0.3em] hover:bg-[#E5B044]"
+              className="w-full bg-[#2D2A26] text-white py-5 font-bold uppercase text-xs tracking-[0.3em] hover:bg-[#E5B044] transition-all"
             >
               Confirmar por WhatsApp
             </button>

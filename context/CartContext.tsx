@@ -1,5 +1,5 @@
 'use client';
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 export const PRODUCTOS_DATA = [
   { 
@@ -7,15 +7,17 @@ export const PRODUCTOS_DATA = [
     nombre: "Asadero tipo Oaxaca", 
     precio: 170, 
     precioLocal: 130, 
+    precioLeon: 200,
     imagen: "/productos/asadero/principal.jpg",
     imagenesGaleria: ["/productos/asadero/principal.jpg", "/productos/asadero/foto1.jpg"],
-    descripcionGourmet: "Nuestro queso estrella. Elaborado artesanalmente con leche fresca del día, logrando una elasticidad perfecta y un sabor cremoso incomparable."
+    descripcionGourmet: "Nuestro queso estrella. Elaborado artesanalmente con leche fresca del día, logrando una elasticidad perfecta."
   },
   { 
     id: 2, 
     nombre: "Fresco", 
     precio: 160, 
     precioLocal: 125, 
+    precioLeon: 200,
     imagen: "/productos/fresco/principal.jpg",
     imagenesGaleria: ["/productos/fresco/principal.jpg", "/productos/fresco/foto1.jpg"],
     descripcionGourmet: "Textura suave y sabor delicado. El compañero ideal para tus platillos mexicanos tradicionales."
@@ -25,24 +27,27 @@ export const PRODUCTOS_DATA = [
     nombre: "Añejo", 
     precio: 180, 
     precioLocal: 140, 
+    precioLeon: 200,
     imagen: "/productos/anejo/principal.jpg",
-    imagenesGaleria: ["/productos/anejo/principal.jpg", "/productos/anejo/foto1.jpg", "/productos/anejo/foto2.jpg", "/productos/anejo/foto3.jpg", "/productos/anejo/foto4.jpg", "/productos/anejo/foto5.jpg", "/productos/anejo/foto6.jpg", "/productos/anejo/foto7.jpg"],
-    descripcionGourmet: "Sabor intenso y textura firme. Un queso con carácter, ideal para maridar o desmoronar sobre tus platillos favoritos."
+    imagenesGaleria: ["/productos/anejo/principal.jpg", "/productos/anejo/foto1.jpg"],
+    descripcionGourmet: "Sabor intenso y textura firme. Un queso con carácter, ideal para maridar."
   },
   { 
     id: 4, 
     nombre: "Panela", 
     precio: 160, 
     precioLocal: 125, 
+    precioLeon: 200,
     imagen: "/productos/panela/principal.jpg",
-    imagenesGaleria: ["/productos/panela/principal.jpg", "/productos/panela/foto1.jpg", "/productos/panela/foto2.jpg", "/productos/panela/foto3.jpg"],
-    descripcionGourmet: "Ligero y fresco. Perfecto para asar o disfrutar en ensaladas por su bajo contenido en grasa."
+    imagenesGaleria: ["/productos/panela/principal.jpg", "/productos/panela/foto1.jpg"],
+    descripcionGourmet: "Ligero y fresco. Perfecto para asar o disfrutar en ensaladas."
   },
   { 
     id: 5, 
     nombre: "Requesón", 
     precio: 100, 
     precioLocal: 80, 
+    precioLeon: 110,
     imagen: "/productos/requeson/principal.jpg",
     imagenesGaleria: ["/productos/requeson/principal.jpg", "/productos/requeson/foto1.jpg"],
     descripcionGourmet: "Crema de queso suave y nutritiva. Elaborado con los estándares más altos de frescura."
@@ -52,12 +57,15 @@ export const PRODUCTOS_DATA = [
     nombre: "Yogurt Artesanal", 
     precio: 60, 
     precioLocal: 45, 
+    precioLeon: 70,
     imagen: "/productos/yogurt/principal.jpg",
     imagenesGaleria: ["/productos/yogurt/principal.jpg", "/productos/yogurt/foto2.jpg"],
-    descripcionGourmet: "Cremoso y natural. Mezclado con fruta real seleccionada, sin conservadores artificiales.",
+    descripcionGourmet: "Cremoso y natural. Mezclado con fruta real seleccionada.",
     sabores: ["Fresa", "Nuez", "Manzana", "Piña-Coco", "Cereal", "Frambuesa", "Zarzamora"] 
   }
 ];
+
+type Zona = 'LOCAL' | 'LEON' | 'NORMAL';
 
 interface CartItem {
   id: number;
@@ -74,9 +82,10 @@ interface CartContextType {
   removeFromCart: (id: number, peso: string) => void;
   updateQuantity: (id: number, peso: string, delta: number) => void;
   clearCart: () => void;
-  isLocal: boolean;
-  toggleLocal: (code: string) => void;
+  zona: Zona;
+  setZona: (z: Zona) => void;
   getPrecioActual: (id: number) => number;
+  getTelefonoWhatsApp: () => string;
   totalItems: number;
 }
 
@@ -84,12 +93,25 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [isLocal, setIsLocal] = useState(false);
+  const [zona, setZona] = useState<Zona>('NORMAL');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('zona-huamiles') as Zona;
+    if (saved) setZona(saved);
+  }, []);
 
   const getPrecioActual = (id: number) => {
     const p = PRODUCTOS_DATA.find(q => q.id === id);
     if (!p) return 0;
-    return isLocal ? p.precioLocal : p.precio;
+    if (zona === 'LOCAL') return p.precioLocal;
+    if (zona === 'LEON') return p.precioLeon;
+    return p.precio;
+  };
+
+  const getTelefonoWhatsApp = () => {
+    if (zona === 'LOCAL') return "524969611765";
+    if (zona === 'LEON') return "524922004655";
+    return "524499354569";
   };
 
   const addToCart = (id: number, pesoLabel: string, multiplicador: number) => {
@@ -113,14 +135,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
   };
 
-  const toggleLocal = (code: string) => {
-    if (code.toUpperCase() === 'MONTESA') {
-      setIsLocal(true);
-    } else {
-      setIsLocal(false);
-    }
-  };
-
   const removeFromCart = (id: number, peso: string) => {
     setCart(prev => prev.filter(i => !(i.id === id && i.pesoLabel === peso)));
   };
@@ -136,7 +150,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   return (
     <CartContext.Provider value={{ 
       cart, addToCart, removeFromCart, updateQuantity, clearCart, 
-      isLocal, toggleLocal, getPrecioActual, totalItems 
+      zona, setZona: (z) => { setZona(z); localStorage.setItem('zona-huamiles', z); }, 
+      getPrecioActual, getTelefonoWhatsApp, totalItems 
     }}>
       {children}
     </CartContext.Provider>

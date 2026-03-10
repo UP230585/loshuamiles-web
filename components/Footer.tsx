@@ -1,98 +1,52 @@
 'use client';
-
-import { useState } from 'react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 
 export default function Footer() {
-  const { isLocal, toggleLocal } = useCart();
-  const [codigoSecreto, setCodigoSecreto] = useState('');
-
-  const manejarEnvio = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Si el usuario escribe MONTESA, se activa la magia
-    toggleLocal(codigoSecreto);
-    // Limpiamos el input para que no se quede la palabra ahí escrita
-    setCodigoSecreto('');
-  };
+  const { getTelefonoWhatsApp, zona } = useCart();
 
   return (
-    <footer className="bg-[#2D2A26] text-[#FDFCF0] pt-20 pb-10 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
-          
-          {/* Columna 1: Marca */}
-          <div className="col-span-1 md:col-span-1">
-            <h2 className="text-2xl font-serif font-bold mb-6">
-              LOS <span className="text-[#E5B044]">HUAMILES</span>
-            </h2>
-            <p className="text-stone-400 text-sm leading-relaxed">
-              Maestros queseros. Llevamos lo mejor de nuestra tienda 
-              directamente a tu mesa.
-            </p>
-          </div>
-
-          {/* Columna 2: Enlaces Rápidos */}
-          <div>
-            <h3 className="text-[#E5B044] text-xs uppercase tracking-widest font-bold mb-6">Explorar</h3>
-            <ul className="space-y-4 text-sm text-stone-300">
-              <li><Link href="/productos" className="hover:text-white transition">Catálogo de Quesos</Link></li>
-              <li><Link href="/historia" className="hover:text-white transition">Nuestra Historia</Link></li>
-              <li><Link href="/maridajes" className="hover:text-white transition">Guía de Maridaje</Link></li>
-            </ul>
-          </div>
-
-          {/* Columna 3: Contacto */}
-          <div>
-            <h3 className="text-[#E5B044] text-xs uppercase tracking-widest font-bold mb-6">Contacto</h3>
-            <ul className="space-y-4 text-sm text-stone-300">
-              <li>Calle 20 de noviembre #11</li>
-              <li>4969611765</li>
-              <li>loshuamiles@gmail.com</li>
-            </ul>
-          </div>
-
-          {/* Columna 4: Newsletter (El Acceso Secreto) */}
-          <div>
-            <h3 className="text-[#E5B044] text-xs uppercase tracking-widest font-bold mb-6">
-              {isLocal ? 'ACCESO AUTORIZADO' : 'Suscríbete'}
-            </h3>
-            <p className="text-sm text-stone-400 mb-4">
-              {isLocal 
-                ? 'Tarifas de socio Montesa aplicadas correctamente.' 
-                : 'Recibe ofertas exclusivas y notas sobre catas.'}
-            </p>
-            <form onSubmit={manejarEnvio} className="flex">
-              <input 
-                type="text" 
-                placeholder={isLocal ? "CÓDIGO ACTIVO" : "Tu email"} 
-                value={codigoSecreto}
-                onChange={(e) => setCodigoSecreto(e.target.value)}
-                className={`bg-stone-800 border-none px-4 py-2 text-sm w-full outline-none transition-all ${
-                  isLocal ? 'text-[#E5B044] font-bold' : 'text-stone-300'
-                } focus:ring-1 focus:ring-[#E5B044]`}
-              />
-              <button 
-                type="submit"
-                className="bg-[#E5B044] text-[#2D2A26] px-4 py-2 font-bold text-xs uppercase hover:bg-white transition-colors"
-              >
-                {isLocal ? 'OK' : 'OK'}
-              </button>
-            </form>
-          </div>
-
-        </div>
-
-        {/* Línea Divisoria y Copyright */}
-        <div className="border-t border-stone-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-stone-500 italic">
-            © 2026 Quesería Los Huamiles. Todos los derechos reservados.
+    <footer className="bg-[#2D2A26] text-[#FDFCF0] py-16 px-6 mt-auto">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
+        
+        {/* Columna 1: Marca y Eslogan */}
+        <div className="space-y-4">
+          <h2 className="font-serif italic text-3xl">Los Huamiles</h2>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-[#E5B044] font-bold">
+            Quesería Artesanal
           </p>
-          <div className="flex gap-6 grayscale opacity-50">
-            <span className="text-xs font-bold uppercase tracking-tighter">Instagram</span>
-            <span className="text-xs font-bold uppercase tracking-tighter">Facebook</span>
+          <p className="text-sm font-light italic text-stone-400 max-w-xs leading-relaxed">
+            "Sabor natural, tradición familiar."
+          </p>
+        </div>
+
+        {/* Columna 2: Enlaces Rápidos */}
+        <div className="flex flex-col gap-3 text-stone-300">
+          <h3 className="text-[11px] uppercase font-bold tracking-widest mb-2 text-white">Navegación</h3>
+          <Link href="/productos" className="text-sm hover:text-[#E5B044] transition-colors">Catálogo de Quesos</Link>
+          <Link href="/historia" className="text-sm hover:text-[#E5B044] transition-colors">Nuestra Historia</Link>
+          <Link href="/carrito" className="text-sm hover:text-[#E5B044] transition-colors">Mi Pedido</Link>
+        </div>
+
+        {/* Columna 3: Contacto Dinámico */}
+        <div className="space-y-4">
+          <h3 className="text-[11px] uppercase font-bold tracking-widest mb-2 text-[#E5B044]">Contacto</h3>
+          <div className="pt-2">
+            <a 
+              href={`https://wa.me/${getTelefonoWhatsApp()}`} 
+              target="_blank" 
+              className="bg-white/5 border border-white/10 px-6 py-3 text-xs uppercase tracking-widest hover:bg-[#E5B044] hover:text-[#2D2A26] transition-all inline-block"
+            >
+              WhatsApp del Vendedor
+            </a>
           </div>
         </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto mt-16 pt-8 border-t border-white/5 text-center">
+        <p className="text-[9px] uppercase tracking-[0.4em] text-stone-600">
+          © {new Date().getFullYear()} LOS HUAMILES — PRODUCTOS NATURALES SIN CONSERVADORES.
+        </p>
       </div>
     </footer>
   );
