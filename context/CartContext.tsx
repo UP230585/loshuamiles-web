@@ -27,7 +27,7 @@ export const PRODUCTOS_DATA = [
     nombre: "Añejo", 
     precio: 180, 
     precioLocal: 140, 
-    precioLeon: 200,
+    precioLeon: 240,
     imagen: "/productos/anejo/principal.jpg",
     imagenesGaleria: ["/productos/anejo/principal.jpg", "/productos/anejo/foto1.jpg"],
     descripcionGourmet: "Sabor intenso y textura firme. Un queso con carácter, ideal para maridar."
@@ -47,7 +47,7 @@ export const PRODUCTOS_DATA = [
     nombre: "Requesón", 
     precio: 100, 
     precioLocal: 80, 
-    precioLeon: 110,
+    precioLeon: 140,
     imagen: "/productos/requeson/principal.jpg",
     imagenesGaleria: ["/productos/requeson/principal.jpg", "/productos/requeson/foto1.jpg"],
     descripcionGourmet: "Crema de queso suave y nutritiva. Elaborado con los estándares más altos de frescura."
@@ -83,7 +83,7 @@ interface CartContextType {
   updateQuantity: (id: number, peso: string, delta: number) => void;
   clearCart: () => void;
   zona: Zona;
-  setZona: (z: Zona) => void; // <--- DEBE LLAMARSE ASÍ
+  setZona: (z: string) => void; 
   getPrecioActual: (id: number) => number;
   getTelefonoWhatsApp: () => string;
   totalItems: number;
@@ -100,17 +100,43 @@ export function CartProvider({ children }: { children: ReactNode }) {
     if (saved) setZonaState(saved);
   }, []);
 
-  const setZona = (nuevaZona: Zona) => {
-    setZonaState(nuevaZona);
-    localStorage.setItem('zona-huamiles', nuevaZona);
+  // Función inteligente para detectar zona y comunidad
+  const setZona = (inputUser: string) => {
+    // Normalizamos: minúsculas, sin espacios extra y sin acentos para comparar mejor
+    const texto = inputUser.toLowerCase().trim()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, ""); 
+
+    // Variaciones para LEÓN
+    const variantesLeon = [
+      'leon', 'leon gto', 'leon guanajuato', 'leon de los aldama', 
+      'leon de los aldamas', 'león', 'león gto', 'león guanajuato'
+    ];
+
+    // Variaciones para LOCAL (Incluyendo tu lista de comunidades)
+    const variantesLocal = [
+
+      'montesa', 'la montesa', 'los campos', 'las negritas', 'negritas', 
+      'el epazote', 'epazote', 'fraguas', 'las fraguas', 'el salitre', 
+      'el arco', 'pilotos', 'ojo de agua', 'el ojo de agua'
+    ];
+
+    let zonaFinal: Zona = 'NORMAL';
+
+    if (variantesLeon.some(v => texto.includes(v))) {
+      zonaFinal = 'LEON';
+    } else if (variantesLocal.some(v => texto.includes(v))) {
+      zonaFinal = 'LOCAL';
+    }
+
+    setZonaState(zonaFinal);
+    localStorage.setItem('zona-huamiles', zonaFinal);
   };
 
   const getPrecioActual = (id: number) => {
-    // Usar PRODUCTOS_DATA que ya tienes definido arriba
-    const p = (typeof PRODUCTOS_DATA !== 'undefined' ? PRODUCTOS_DATA : []).find(q => q.id === id);
+    const p = PRODUCTOS_DATA.find(q => q.id === id);
     if (!p) return 0;
     if (zona === 'LOCAL') return p.precioLocal;
-    if (zona === 'LEON') return p.precioLeon || p.precio; 
+    if (zona === 'LEON') return p.precioLeon; 
     return p.precio;
   };
 
@@ -121,7 +147,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const addToCart = (id: number, pesoLabel: string, multiplicador: number) => {
-    const producto = (typeof PRODUCTOS_DATA !== 'undefined' ? PRODUCTOS_DATA : []).find(p => p.id === id);
+    const producto = PRODUCTOS_DATA.find(p => p.id === id);
     if (!producto) return;
     setCart((prev) => {
       const exists = prev.find(item => item.id === id && item.pesoLabel === pesoLabel);
