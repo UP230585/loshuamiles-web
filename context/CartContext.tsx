@@ -83,7 +83,7 @@ interface CartContextType {
   updateQuantity: (id: number, peso: string, delta: number) => void;
   clearCart: () => void;
   zona: Zona;
-  setZona: (z: Zona) => void;
+  setZona: (z: Zona) => void; // <--- DEBE LLAMARSE ASÍ
   getPrecioActual: (id: number) => number;
   getTelefonoWhatsApp: () => string;
   totalItems: number;
@@ -93,18 +93,24 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [zona, setZona] = useState<Zona>('NORMAL');
+  const [zona, setZonaState] = useState<Zona>('NORMAL');
 
   useEffect(() => {
     const saved = localStorage.getItem('zona-huamiles') as Zona;
-    if (saved) setZona(saved);
+    if (saved) setZonaState(saved);
   }, []);
 
+  const setZona = (nuevaZona: Zona) => {
+    setZonaState(nuevaZona);
+    localStorage.setItem('zona-huamiles', nuevaZona);
+  };
+
   const getPrecioActual = (id: number) => {
-    const p = PRODUCTOS_DATA.find(q => q.id === id);
+    // Usar PRODUCTOS_DATA que ya tienes definido arriba
+    const p = (typeof PRODUCTOS_DATA !== 'undefined' ? PRODUCTOS_DATA : []).find(q => q.id === id);
     if (!p) return 0;
     if (zona === 'LOCAL') return p.precioLocal;
-    if (zona === 'LEON') return p.precioLeon;
+    if (zona === 'LEON') return p.precioLeon || p.precio; 
     return p.precio;
   };
 
@@ -115,43 +121,24 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const addToCart = (id: number, pesoLabel: string, multiplicador: number) => {
-    const producto = PRODUCTOS_DATA.find(p => p.id === id);
+    const producto = (typeof PRODUCTOS_DATA !== 'undefined' ? PRODUCTOS_DATA : []).find(p => p.id === id);
     if (!producto) return;
-
     setCart((prev) => {
       const exists = prev.find(item => item.id === id && item.pesoLabel === pesoLabel);
-      if (exists) {
-        return prev.map(item => (item.id === id && item.pesoLabel === pesoLabel) 
-          ? { ...item, cantidad: item.cantidad + 1 } : item);
-      }
-      return [...prev, { 
-        id, 
-        nombre: producto.nombre, 
-        imagen: producto.imagen, 
-        cantidad: 1, 
-        pesoLabel, 
-        multiplicador 
-      }];
+      if (exists) return prev.map(item => (item.id === id && item.pesoLabel === pesoLabel) ? { ...item, cantidad: item.cantidad + 1 } : item);
+      return [...prev, { id, nombre: producto.nombre, imagen: producto.imagen, cantidad: 1, pesoLabel, multiplicador }];
     });
   };
 
-  const removeFromCart = (id: number, peso: string) => {
-    setCart(prev => prev.filter(i => !(i.id === id && i.pesoLabel === peso)));
-  };
-
-  const updateQuantity = (id: number, peso: string, delta: number) => {
-    setCart(prev => prev.map(i => (i.id === id && i.pesoLabel === peso) 
-      ? { ...i, cantidad: Math.max(1, i.cantidad + delta) } : i));
-  };
-
+  const removeFromCart = (id: number, peso: string) => setCart(prev => prev.filter(i => !(i.id === id && i.pesoLabel === peso)));
+  const updateQuantity = (id: number, peso: string, delta: number) => setCart(prev => prev.map(i => (i.id === id && i.pesoLabel === peso) ? { ...i, cantidad: Math.max(1, i.cantidad + delta) } : i));
   const clearCart = () => setCart([]);
   const totalItems = cart.reduce((acc, item) => acc + item.cantidad, 0);
 
   return (
     <CartContext.Provider value={{ 
       cart, addToCart, removeFromCart, updateQuantity, clearCart, 
-      zona, setZona: (z) => { setZona(z); localStorage.setItem('zona-huamiles', z); }, 
-      getPrecioActual, getTelefonoWhatsApp, totalItems 
+      zona, setZona, getPrecioActual, getTelefonoWhatsApp, totalItems 
     }}>
       {children}
     </CartContext.Provider>
