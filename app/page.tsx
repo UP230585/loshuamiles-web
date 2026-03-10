@@ -3,7 +3,8 @@ import Link from 'next/link';
 import { useCart, PRODUCTOS_DATA } from '@/context/CartContext';
 
 export default function Home() {
-  const { getPrecioActual, isLocal } = useCart();
+  // Cambiamos isLocal por zona
+  const { getPrecioActual, zona } = useCart();
   
   // Mostramos Asadero, Fresco y Panela en el inicio
   const QUESOS_DESTACADOS = PRODUCTOS_DATA.filter(p => [1, 2, 4].includes(p.id));
@@ -47,9 +48,11 @@ export default function Home() {
                   alt={queso.nombre}
                   className="object-cover w-full h-full transition-transform duration-1000 group-hover:scale-110"
                 />
-                {isLocal && (
+                
+                {/* Etiqueta dinámica según la zona */}
+                {zona !== 'NORMAL' && (
                   <div className="absolute top-4 left-4 bg-[#E5B044] text-white text-[8px] font-bold px-2 py-1 uppercase tracking-widest shadow-lg">
-                    Precio Local
+                    Precio {zona === 'LOCAL' ? 'Local' : 'León'}
                   </div>
                 )}
               </div>

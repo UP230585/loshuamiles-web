@@ -6,7 +6,7 @@ import { useCart, PRODUCTOS_DATA } from '@/context/CartContext';
 
 export default function DetalleProducto({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
-  const { addToCart, isLocal, getPrecioActual } = useCart();
+  const { addToCart, zona, getPrecioActual } = useCart();
   
   const producto = PRODUCTOS_DATA.find((q) => q.id.toString() === resolvedParams.id);
 
@@ -57,7 +57,7 @@ export default function DetalleProducto({ params }: { params: Promise<{ id: stri
     
     setMultiplicadorActual(m);
     setPrecioVisual(precioBaseUnidad * m);
-  }, [pesoFijo, pesoLibre, tamanioPanela, tamanioYogurt, producto, isLocal, getPrecioActual]);
+  }, [pesoFijo, pesoLibre, tamanioPanela, tamanioYogurt, producto, zona, getPrecioActual]);
 
   if (!producto) return <div className="pt-40 text-center bg-[#FDFCF0] min-h-screen">Producto no encontrado</div>;
 
@@ -76,21 +76,18 @@ export default function DetalleProducto({ params }: { params: Promise<{ id: stri
         
         {/* COLUMNA IZQUIERDA: GALERÍA */}
         <div className="flex flex-col gap-3">
-          {/* Foto Principal */}
           <div className="relative aspect-square overflow-hidden bg-white rounded-sm shadow-sm border border-stone-100">
             <img 
               src={fotoPrincipal} 
               alt={producto.nombre} 
               className="object-cover w-full h-full transition-all duration-500" 
             />
-            {isLocal && (
-              <div className="absolute top-4 left-4 bg-[#2D2A26] text-white text-[9px] font-bold px-3 py-1 uppercase tracking-[0.2em] shadow-lg">
-                Tarifa Local
-              </div>
-            )}
+            {/* ETIQUETA FIJA ARTESANAL */}
+            <div className="absolute top-4 left-4 bg-[#2D2A26] text-white text-[9px] font-bold px-3 py-1 uppercase tracking-[0.2em] shadow-lg">
+              Artesanal
+            </div>
           </div>
           
-          {/* Miniaturas Extra Pequeñas (8 columnas) */}
           {producto.imagenesGaleria && producto.imagenesGaleria.length > 1 && (
             <div className="grid grid-cols-8 gap-1.5 max-w-[75%]">
               {producto.imagenesGaleria.map((img, idx) => (
@@ -119,7 +116,8 @@ export default function DetalleProducto({ params }: { params: Promise<{ id: stri
             <p className="text-3xl font-light text-[#E5B044] tracking-tighter">
               ${precioVisual.toFixed(2)}
             </p>
-            {isLocal && <span className="text-[10px] bg-stone-100 px-2 py-1 uppercase font-bold text-stone-500">Precio Socio</span>}
+            {/* INDICADOR DE ZONA DISCRETO */}
+            {zona !== 'NORMAL' && <span className="text-[10px] bg-stone-100 px-2 py-1 uppercase font-bold text-stone-500 italic">Tarifa {zona === 'LOCAL' ? 'Local' : 'León'}</span>}
           </div>
           
           <div className="border-t border-stone-200 pt-8">
@@ -127,7 +125,6 @@ export default function DetalleProducto({ params }: { params: Promise<{ id: stri
               "{producto.descripcionGourmet || "Artesanía láctea de la más alta calidad."}"
             </p>
 
-            {/* OPCIONES ESPECÍFICAS */}
             {producto.id === 6 && (
               <>
                 <div className="mb-6">

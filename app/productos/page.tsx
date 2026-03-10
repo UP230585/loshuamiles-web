@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { useCart, PRODUCTOS_DATA } from '@/context/CartContext';
 
 export default function ProductosPage() {
-  // Extraemos las funciones y el estado del carrito
-  const { getPrecioActual, isLocal } = useCart();
+  const { getPrecioActual } = useCart();
 
   return (
     <main className="min-h-screen bg-[#FDFCF0] pt-32 pb-20 px-6">
@@ -15,10 +14,7 @@ export default function ProductosPage() {
         <header className="mb-16">
           <h1 className="text-4xl font-serif text-[#2D2A26] mb-4 italic">Nuestro Catálogo</h1>
           <p className="text-stone-500 italic font-light">
-            {isLocal 
-              ? "Seleccionamos las mejores piezas de nuestra variedad para tu mesa." 
-              : "Seleccionamos las mejores piezas de nuestra variedad para tu mesa."
-            }
+            Seleccionamos las mejores piezas de nuestra variedad para tu mesa.
           </p>
         </header>
 
@@ -30,7 +26,7 @@ export default function ProductosPage() {
               key={queso.id} 
               className="group flex flex-col cursor-pointer"
             >
-              {/* Contenedor de Imagen con Efecto Zoom */}
+              {/* Contenedor de Imagen */}
               <div className="relative aspect-square overflow-hidden bg-stone-200 mb-4 rounded-sm shadow-sm">
                 <img 
                   src={queso.imagen} 
@@ -38,12 +34,11 @@ export default function ProductosPage() {
                   className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700 ease-in-out"
                 />
                 
-                {/* Etiqueta flotante */}
+                {/* ETIQUETA SIEMPRE ARTESANAL */}
                 <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-[#2D2A26]">
-                  {isLocal ? 'Artesanal' : 'Artesanal'}
+                  Artesanal
                 </div>
 
-                {/* Overlay sutil al hacer hover */}
                 <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
