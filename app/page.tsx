@@ -52,7 +52,7 @@ export default function Home() {
                 {/* Etiqueta dinámica según la zona */}
                 {zona !== 'NORMAL' && (
                   <div className="absolute top-4 left-4 bg-[#E5B044] text-white text-[8px] font-bold px-2 py-1 uppercase tracking-widest shadow-lg">
-                    Precio {zona === 'LOCAL' ? 'Local' : 'León'}
+                    ARTESANAL
                   </div>
                 )}
               </div>
