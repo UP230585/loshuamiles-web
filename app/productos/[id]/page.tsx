@@ -117,7 +117,7 @@ export default function DetalleProducto({ params }: { params: Promise<{ id: stri
               ${precioVisual.toFixed(2)}
             </p>
             {/* INDICADOR DE ZONA DISCRETO */}
-            {zona !== 'NORMAL' && <span className="text-[10px] bg-stone-100 px-2 py-1 uppercase font-bold text-stone-500 italic">Tarifa {zona === 'LOCAL' ? 'Local' : 'León'}</span>}
+            {zona !== 'NORMAL' && <span className="text-[10px] bg-stone-100 px-2 py-1 uppercase font-bold text-stone-500 italic"></span>}
           </div>
           
           <div className="border-t border-stone-200 pt-8">
