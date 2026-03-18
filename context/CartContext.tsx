@@ -61,7 +61,7 @@ export const PRODUCTOS_DATA = [
     imagen: "/productos/yogurt/principal.jpg",
     imagenesGaleria: ["/productos/yogurt/principal.jpg", "/productos/yogurt/foto2.jpg"],
     descripcionGourmet: "Cremoso y natural. Mezclado con fruta real seleccionada.",
-    sabores: ["Fresa", "Nuez", "Manzana", "Piña-Coco", "Cereal", "Frambuesa", "Zarzamora"] 
+    sabores: ["Fresa", "Nuez", "Manzana", "Piña-Coco", "Cereal", "Frambuesa", "Zarzamora","Durazno"] 
   }
 ];
 

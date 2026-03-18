@@ -6,7 +6,7 @@ import { CartProvider } from "@/context/CartContext";
 import SelectorZona from "@/components/SelectorZona";
 
 export const metadata: Metadata = {
-  title: "Quesería Los huamiles | Quesos Premium",
+  title: "Quesería Los huamiles | Quesos Artesanales",
   description: "Selección de quesos artesanales.",
 };
 
